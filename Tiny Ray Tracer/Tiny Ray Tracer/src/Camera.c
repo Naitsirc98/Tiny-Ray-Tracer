@@ -23,3 +23,4 @@ Ray cam_get_ray(Camera* cam, float u, float v)
 
 	return ray_create(cam->origin, d1);
 }
+

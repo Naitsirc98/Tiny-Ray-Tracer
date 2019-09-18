@@ -25,6 +25,9 @@ int main()
 
 	// Antialiasing samples
 	unsigned int samples = 100;
+	
+	// Gamma correction
+	float gamma = 2.2f;
 
 	img_init(&image, 200, 100, IMG_CHANNELS_RGB);
 
@@ -63,6 +66,10 @@ int main()
 			}
 			// Get average color
 			vec3_divs(&color, samples);
+			// Gamma-correct the color
+			color.r = powf(color.r, 1.0f / gamma);
+			color.g = powf(color.g, 1.0f / gamma);
+			color.b = powf(color.b, 1.0f / gamma);
 
 			unsigned char ir = (unsigned char)(255.99f * color.r);
 			unsigned char ig = (unsigned char)(255.99f * color.g);
@@ -86,13 +93,33 @@ int main()
 	return 0;
 }
 
+Vec3 random_point_in_unit_sphere()
+{
+	Vec3 point;
+	do
+	{
+		vec3_set(&point, randf(), randf(), randf());
+		vec3_muls(&point, 2.0f);
+		vec3_subs(&point, 1.0f);
+	} while(vec3_sqrtlen(&point) >= 1.0f);
+
+	return point;
+}
+
 Vec3 get_color(const Ray* ray, Hitable* world)
 {
 	HitRecord record;
 
-	if(world->hit(world, ray, 0.0f, FLT_MAX, &record))
+	if(world->hit(world, ray, 0.001f, FLT_MAX, &record))
 	{
-		return *vec3_muls(vec3_adds(&record.normal, 1.0f), 0.5f);
+		Vec3 target;
+		Vec3 rand_point = random_point_in_unit_sphere();
+		vec3_add(vec3_add_c(&record.p, &record.normal, &target), &rand_point);
+
+		Ray new_ray = ray_create(record.p, *vec3_sub(&target, &record.p));
+		Vec3 color = get_color(&new_ray, world);
+
+		return *vec3_muls(&color, 0.5f);
 	} 
 
 	Vec3 unit_dir;

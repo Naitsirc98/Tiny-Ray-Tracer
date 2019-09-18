@@ -108,9 +108,9 @@ Vec3* vec3_subs(Vec3* v1, float scalar)
 
 Vec3* vec3_subs_c(const Vec3* v1, float scalar, Vec3* dest)
 {
-	dest->x = v1->x + scalar;
-	dest->y = v1->y + scalar;
-	dest->z = v1->z + scalar;
+	dest->x = v1->x - scalar;
+	dest->y = v1->y - scalar;
+	dest->z = v1->z - scalar;
 
 	return dest;
 }
