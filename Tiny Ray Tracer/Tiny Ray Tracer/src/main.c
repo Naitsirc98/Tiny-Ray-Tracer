@@ -2,23 +2,12 @@
 #include "Image.h"
 #include "Vec3.h"
 #include "Ray.h"
+#include <math.h>
 
 #define IMAGE_FILENAME "output_image.png"
 
-Vec3 get_color(const Ray* ray)
-{
-	Vec3 unit_dir;
-	vec3_normalize_c(&ray->direction, &unit_dir);
-	float t = 0.5f * (unit_dir.y + 1.0f);
-	
-	Vec3 v1 = vec3_create_val(1.0f);
-	Vec3 v2 = vec3_create(0.5f, 0.7f, 1.0f);
-
-	vec3_muls(&v1, 1.0f - t);
-	vec3_muls(&v2, t);
-
-	return *vec3_add(&v1, &v2);
-}
+int hit_sphere(const Vec3* center, float radius, const Ray* ray);
+Vec3 get_color(const Ray* ray);
 
 int main()
 {
@@ -71,4 +60,40 @@ int main()
 	}
 
 	return 0;
+}
+
+
+int hit_sphere(const Vec3 center, float radius, const Ray* ray)
+{
+	Vec3 oc;
+	vec3_sub_c(&ray->origin, &center, &oc);
+
+	float a = vec3_dot(&ray->direction, &ray->direction);
+	float b = 2.0f * vec3_dot(&oc, &ray->direction);
+	float c = vec3_dot(&oc, &oc) - radius * radius;
+
+	float discriminant = b * b - 4 * a * c;
+
+	return discriminant > 0;
+}
+
+Vec3 get_color(const Ray* ray)
+{
+	if(hit_sphere(vec3_create(0.0f, 0.0f, -1.0f), 0.5f, ray))
+	{
+		return vec3_create(1.0f, 0.0f, 0.0f); // Red color
+	}
+
+	Vec3 unit_dir;
+	vec3_normalize_c(&ray->direction, &unit_dir);
+
+	float t = 0.5f * (unit_dir.y + 1.0f);
+
+	Vec3 v1 = vec3_create_val(1.0f);
+	Vec3 v2 = vec3_create(0.5f, 0.7f, 1.0f);
+
+	vec3_muls(&v1, 1.0f - t);
+	vec3_muls(&v2, t);
+
+	return *vec3_add(&v1, &v2);
 }
