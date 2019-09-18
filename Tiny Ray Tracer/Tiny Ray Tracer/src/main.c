@@ -1,36 +1,45 @@
 #include <stdio.h>
+#include "Image.h"
 
-#define IMAGE_FILENAME "output_image.ppm"
-
+#define IMAGE_FILENAME "output_image.png"
 
 int main()
 {
-	FILE* image_file;
 
-	fopen_s(&image_file, IMAGE_FILENAME, "wb+");
+	Image image;
 
-	const int nx = 200;
-	const int ny = 100;
+	img_init(&image, 200, 100, IMG_CHANNELS_RGB);
 
-	fprintf(image_file, "P3\n%i %i\n255\n", nx, ny);
+	int offset = 0;
 
-	for(int i = ny - 1;i >= 0;--i)
+	for(int i = image.height - 1;i >= 0;--i)
 	{
-		for(int j = 0;j < nx;++j)
+		for(int j = 0;j < image.width;++j)
 		{
-			float r = (float)j / (float)nx;
-			float g = (float)i / (float)ny;
+			float r = (float)j / (float)image.width;
+			float g = (float)i / (float)image.height;
 			float b = 0.2f;
 
-			int ir = (int)(255.99f * r);
-			int ig = (int)(255.99f * g);
-			int ib = (int)(255.99f * b);
+			BYTE ir = (BYTE)(255.99f * r);
+			BYTE ig = (BYTE)(255.99f * g);
+			BYTE ib = (BYTE)(255.99f * b);
 
-			fprintf(image_file, "%i %i %i\n", ir, ig, ib);
+			image.data[offset + 0] = ir;
+			image.data[offset + 1] = ig;
+			image.data[offset + 2] = ib;
+			
+			offset += image.channels;
 		}
 	}
 
-	fclose(image_file);
+	if(!img_write_file(&image, IMAGE_FILENAME, PNG))
+	{
+		printf("ERROR: could not write image to %s\n", IMAGE_FILENAME);
+		printf("Image data:\n\twidth: %i\n\theight: %i\n\tchannels: %i\n\tdata address: %#08x\n",
+			image.width, image.height, image.channels, (int)image.data);
+	}
+
+	system("pause");
 
 	return 0;
 }
