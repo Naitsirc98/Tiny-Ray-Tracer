@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include "Image.h"
+#include "Vector3f.h"
 
 #define IMAGE_FILENAME "output_image.png"
 
 int main()
 {
-
 	Image image;
 
 	img_init(&image, 200, 100, IMG_CHANNELS_RGB);
@@ -16,13 +16,12 @@ int main()
 	{
 		for(int j = 0;j < image.width;++j)
 		{
-			float r = (float)j / (float)image.width;
-			float g = (float)i / (float)image.height;
-			float b = 0.2f;
+			vec3 color;
+			vec3_set(&color, (float)j / (float)image.width, (float)i / (float)image.height, 0.2f);
 
-			BYTE ir = (BYTE)(255.99f * r);
-			BYTE ig = (BYTE)(255.99f * g);
-			BYTE ib = (BYTE)(255.99f * b);
+			BYTE ir = (BYTE)(255.99f * color.r);
+			BYTE ig = (BYTE)(255.99f * color.g);
+			BYTE ib = (BYTE)(255.99f * color.b);
 
 			image.data[offset + 0] = ir;
 			image.data[offset + 1] = ig;
@@ -38,8 +37,6 @@ int main()
 		printf("Image data:\n\twidth: %i\n\theight: %i\n\tchannels: %i\n\tdata address: %#08x\n",
 			image.width, image.height, image.channels, (int)image.data);
 	}
-
-	system("pause");
 
 	return 0;
 }

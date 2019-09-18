@@ -121,10 +121,12 @@
   <ItemGroup>
     <ClCompile Include="src\Image.c" />
     <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\Vector3f.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Image.h" />
     <ClInclude Include="include\stb_image_write.h" />
+    <ClInclude Include="include\Vector3f.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
