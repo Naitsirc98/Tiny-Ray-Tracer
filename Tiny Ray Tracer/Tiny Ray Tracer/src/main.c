@@ -2,12 +2,15 @@
 #include "Image.h"
 #include "Vec3.h"
 #include "Ray.h"
+#include "Sphere.h"
+#include "HitableList.h"
+#include <stdlib.h>
 #include <math.h>
+#include <float.h>
 
 #define IMAGE_FILENAME "output_image.png"
 
-float hit_sphere(const Vec3* center, float radius, const Ray* ray);
-Vec3 get_color(const Ray* ray);
+Vec3 get_color(const Ray* ray, Hitable* world);
 
 int main()
 {
@@ -21,6 +24,16 @@ int main()
 	Vec3 horizontal = vec3_create(4.0f, 0.0f, 0.0f);
 	Vec3 vertical = vec3_create(0.0f, 2.0f, 0.0f);
 	Vec3 origin = vec3_create_val(0.0f);
+
+	Hitable* list[2];
+
+	Sphere s1 = sphere_create(vec3_create(0, 0, -1), 0.5f);
+	Sphere s2 = sphere_create(vec3_create(0, -100.5f, -1), 100.0f);
+
+	list[0] = (Hitable*)&s1;
+	list[1] = (Hitable*)&s2;
+
+	HitableList world = hlist_create(list, 2);
 
 	for(int i = image.height - 1;i >= 0;--i)
 	{
@@ -38,11 +51,13 @@ int main()
 
 			Ray ray = ray_create(origin, d1);
 
-			Vec3 color = get_color(&ray);
+			Vec3 p = ray_point_at(&ray, 2.0f);
 
-			BYTE ir = (BYTE)(255.99f * color.r);
-			BYTE ig = (BYTE)(255.99f * color.g);
-			BYTE ib = (BYTE)(255.99f * color.b);
+			Vec3 color = get_color(&ray, &world);
+
+			unsigned char ir = (unsigned char)(255.99f * color.r);
+			unsigned char ig = (unsigned char)(255.99f * color.g);
+			unsigned char ib = (unsigned char)(255.99f * color.b);
 
 			image.data[offset + 0] = ir;
 			image.data[offset + 1] = ig;
@@ -62,38 +77,19 @@ int main()
 	return 0;
 }
 
-
-float hit_sphere(const Vec3 center, float radius, const Ray* ray)
+Vec3 get_color(const Ray* ray, Hitable* world)
 {
-	Vec3 oc;
-	vec3_sub_c(&ray->origin, &center, &oc);
+	HitRecord record;
 
-	float a = vec3_dot(&ray->direction, &ray->direction);
-	float b = 2.0f * vec3_dot(&oc, &ray->direction);
-	float c = vec3_dot(&oc, &oc) - radius * radius;
-
-	float discriminant = b * b - 4 * a * c;
-
-	return discriminant < 0 ? -1.0f : ((-b - sqrt(discriminant)) / (2.0f * a));
-}
-
-Vec3 get_color(const Ray* ray)
-{
-	float t = hit_sphere(vec3_create(0.0f, 0.0f, -1.0f), 0.5f, ray);
-	
-	if(t > 0.0f)
+	if(world->hit(world, ray, 0.0f, FLT_MAX, &record))
 	{
-		Vec3 n = ray_point_at(ray, t);
-		++n.z;
-		vec3_normalize(&n);
-
-		return *vec3_muls(vec3_adds(&n, 1.0f), 0.5f);
-	}
+		return *vec3_muls(vec3_adds(&record.normal, 1.0f), 0.5f);
+	} 
 
 	Vec3 unit_dir;
 	vec3_normalize_c(&ray->direction, &unit_dir);
 
-	t = 0.5f * (unit_dir.y + 1.0f);
+	float t = 0.5f * (unit_dir.y + 1.0f);
 
 	Vec3 v1 = vec3_create_val(1.0f);
 	Vec3 v2 = vec3_create(0.5f, 0.7f, 1.0f);

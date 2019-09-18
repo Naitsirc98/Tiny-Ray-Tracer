@@ -191,7 +191,7 @@ STBIWDEF int stbi_write_tga_to_func(stbi_write_func*func, void*context, int w, i
 STBIWDEF int stbi_write_hdr_to_func(stbi_write_func*func, void*context, int w, int h, int comp, const float*data);
 STBIWDEF int stbi_write_jpg_to_func(stbi_write_func*func, void*context, int x, int y, int comp, const void *data, int quality);
 
-STBIWDEF void stbi_flip_vertically_on_write(int flip_boolean);
+STBIWDEF void stbi_flip_vertically_on_write(int flip_int);
 
 #endif//INCLUDE_STB_IMAGE_WRITE_H
 

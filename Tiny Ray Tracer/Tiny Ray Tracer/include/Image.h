@@ -3,8 +3,6 @@
 #define IMG_CHANNELS_RGB 3
 #define IMG_CHANNELS_RGBA 4
 
-#define BYTE unsigned char
-
 typedef enum 
 {
     PNG, BMP, TGA, JPEG, HDR
@@ -15,7 +13,7 @@ typedef struct
     unsigned int width;
     unsigned int height;
     unsigned int channels;
-    BYTE* data;
+    unsigned char* data;
 } Image;
 
 /* Initializes the image data buffer*/
