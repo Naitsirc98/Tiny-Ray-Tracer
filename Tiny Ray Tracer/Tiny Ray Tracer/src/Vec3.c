@@ -124,9 +124,9 @@ Vec3* vec3_mul(Vec3* v1, const Vec3* v2)
 
 Vec3* vec3_mul_c(const Vec3* v1, const Vec3* v2, Vec3* dest)
 {
-	dest->x = v1->x* v2->x;
-	dest->y = v1->y* v2->y;
-	dest->z = v1->z* v2->z;
+	dest->x = v1->x * v2->x;
+	dest->y = v1->y * v2->y;
+	dest->z = v1->z * v2->z;
 
 	return dest;
 }
@@ -140,9 +140,9 @@ Vec3* vec3_muls(Vec3* v1, float scalar)
 
 Vec3* vec3_muls_c(const Vec3* v1, float scalar, Vec3* dest)
 {
-	dest->x = v1->x* scalar;
-	dest->y = v1->y* scalar;
-	dest->z = v1->z* scalar;
+	dest->x = v1->x * scalar;
+	dest->y = v1->y * scalar;
+	dest->z = v1->z * scalar;
 
 	return dest;
 }
@@ -194,9 +194,9 @@ Vec3* vec3_cross(Vec3* v1, const Vec3* v2)
 
 Vec3* vec3_cross_c(const Vec3* v1, const Vec3* v2, Vec3* dest)
 {
-	float x = v1->y* v2->z - v1->z* v2->y;
-	float y = v1->x* v2->z - v1->z* v2->x;
-	float z = v1->x* v2->y - v1->y* v2->x;
+	float x = v1->y * v2->z - v1->z * v2->y;
+	float y = v1->x * v2->z - v1->z * v2->x;
+	float z = v1->x * v2->y - v1->y * v2->x;
 
 	return vec3_set(dest, x, y, z);
 }
