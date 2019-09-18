@@ -18,6 +18,10 @@ typedef struct
 	};
 } Vec3;
 
+/* Create a vector with the specified values */
+Vec3 vec3_create(float x, float y, float z);
+/* Create a vector with the specified values */
+Vec3 vec3_create_val(float xyz);
 /* Set all components of this vector to the given values*/
 Vec3* vec3_set(Vec3* vec, float x, float y, float z);
 /* Returns the length of the given vector*/
@@ -70,3 +74,7 @@ float vec3_dot(const Vec3* v1, const Vec3* v2);
 Vec3* vec3_cross(Vec3* v1, const Vec3* v2);
 /* Performs the cross product between v1 and v2 and stores the result in dest*/
 Vec3* vec3_cross_c(const Vec3* v1, const Vec3* v2, Vec3* dest);
+/* Returns a copy of the given vector */
+Vec3 vec3_copy(const Vec3* src);
+/* Makes a copy of the given vector and stores the result in dest*/
+Vec3* vec3_copy_to(const Vec3* src, Vec3* dest);

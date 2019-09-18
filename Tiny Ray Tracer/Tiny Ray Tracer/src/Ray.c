@@ -1,5 +1,10 @@
 #include "Ray.h"
 
+Ray ray_create(Vec3 origin, Vec3 direction)
+{
+	return (Ray) {origin, direction};
+}
+
 Vec3 ray_point_at(const Ray* ray, float t)
 {
 	Vec3 dest;

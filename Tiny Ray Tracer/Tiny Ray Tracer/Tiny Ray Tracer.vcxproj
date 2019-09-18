@@ -121,6 +121,7 @@
   <ItemGroup>
     <ClCompile Include="src\Image.c" />
     <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\Ray.c" />
     <ClCompile Include="src\Vec3.c" />
   </ItemGroup>
   <ItemGroup>

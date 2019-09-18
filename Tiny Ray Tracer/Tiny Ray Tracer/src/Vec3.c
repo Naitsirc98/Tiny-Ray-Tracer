@@ -1,6 +1,17 @@
 #include "Vec3.h"
 #include <math.h>
 
+
+Vec3 vec3_create(float x, float y, float z)
+{
+	return (Vec3) {x, y, z};
+}
+
+Vec3 vec3_create_val(float xyz)
+{
+	return vec3_create(xyz, xyz, xyz);
+}
+
 Vec3* vec3_set(Vec3* vec, float x, float y, float z)
 {
 	vec->x = x;
@@ -188,4 +199,14 @@ Vec3* vec3_cross_c(const Vec3* v1, const Vec3* v2, Vec3* dest)
 	float z = v1->x* v2->y - v1->y* v2->x;
 
 	return vec3_set(dest, x, y, z);
+}
+
+Vec3 vec3_copy(const Vec3* src)
+{
+	return (Vec3) {src->x, src->y, src->z};
+}
+
+Vec3* vec3_copy_to(const Vec3* src, Vec3* dest)
+{
+	return vec3_set(dest, src->x, src->y, src->z);
 }
