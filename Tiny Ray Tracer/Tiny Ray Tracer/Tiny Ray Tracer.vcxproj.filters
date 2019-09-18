@@ -21,7 +21,7 @@
     <ClCompile Include="src\Image.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vector3f.c">
+    <ClCompile Include="src\Vec3.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,7 +32,10 @@
     <ClInclude Include="include\Image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Vector3f.h">
+    <ClInclude Include="include\Ray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

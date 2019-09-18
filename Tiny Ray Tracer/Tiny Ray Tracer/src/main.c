@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "Image.h"
-#include "Vector3f.h"
+#include "Vec3.h"
 
 #define IMAGE_FILENAME "output_image.png"
 
@@ -16,7 +16,7 @@ int main()
 	{
 		for(int j = 0;j < image.width;++j)
 		{
-			vec3 color;
+			Vec3 color;
 			vec3_set(&color, (float)j / (float)image.width, (float)i / (float)image.height, 0.2f);
 
 			BYTE ir = (BYTE)(255.99f * color.r);
