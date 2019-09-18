@@ -123,6 +123,7 @@
     <ClCompile Include="src\HitableList.c" />
     <ClCompile Include="src\Image.c" />
     <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\Material.c" />
     <ClCompile Include="src\Ray.c" />
     <ClCompile Include="src\Sphere.c" />
     <ClCompile Include="src\Vec3.c" />
@@ -132,9 +133,11 @@
     <ClInclude Include="include\Hitable.h" />
     <ClInclude Include="include\HitableList.h" />
     <ClInclude Include="include\Image.h" />
+    <ClInclude Include="include\Material.h" />
     <ClInclude Include="include\Ray.h" />
     <ClInclude Include="include\Sphere.h" />
     <ClInclude Include="include\stb_image_write.h" />
+    <ClInclude Include="include\util.h" />
     <ClInclude Include="include\Vec3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

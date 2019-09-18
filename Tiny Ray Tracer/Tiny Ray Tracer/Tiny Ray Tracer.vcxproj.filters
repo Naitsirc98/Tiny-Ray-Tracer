@@ -36,6 +36,9 @@
     <ClCompile Include="src\Camera.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Material.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image_write.h">
@@ -60,6 +63,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

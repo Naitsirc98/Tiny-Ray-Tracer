@@ -1,19 +1,12 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <float.h>
-#include <math.h>
+#include "util.h"
 #include "Image.h"
 #include "Sphere.h"
 #include "HitableList.h"
 #include "Camera.h"
-#include <time.h>
+#include "Material.h"
 
 #define IMAGE_FILENAME "output_image.png"
-
-inline float randf()
-{
-	return ((float)rand()/(float)(RAND_MAX));
-}
 
 Vec3 get_color(const Ray* ray, Hitable* world);
 
@@ -29,19 +22,30 @@ int main()
 	// Gamma correction
 	float gamma = 2.2f;
 
-	img_init(&image, 200, 100, IMG_CHANNELS_RGB);
+	img_init(&image, 800, 400, IMG_CHANNELS_RGB);
+
+	float aspectRatio = (float)image.width / (float)image.height;
 
 	int offset = 0;
 
-	Hitable* list[2];
+	Hitable* list[4];
 
-	Sphere s1 = sphere_create(vec3_create(0, 0, -1), 0.5f);
-	Sphere s2 = sphere_create(vec3_create(0, -100.5f, -1), 100.0f);
+	Lambertian lamb1 = mat_create_lamb(vec3_create(0.8f, 0.3f, 0.3f));
+	Lambertian lamb2 = mat_create_lamb(vec3_create(0.8f, 0.8f, 0.0f));
+	Metal metal1 = mat_create_metal(vec3_create(0.8f, 0.6f, 0.2f), 1.0f);
+	Metal metal2 = mat_create_metal(vec3_create(0.8f, 0.8f, 0.8f), 0.3f);
+
+	Sphere s1 = sphere_create(vec3_create(0, 0, -1), 0.5f, &lamb1);
+	Sphere s2 = sphere_create(vec3_create(0, -100.5f, -1), 100.0f, &lamb2);
+	Sphere s3 = sphere_create(vec3_create(1, 0, -1), 0.5f, &metal1);
+	Sphere s4 = sphere_create(vec3_create(-1, 0, -1), 0.5f, &metal2);
 
 	list[0] = (Hitable*)&s1;
 	list[1] = (Hitable*)&s2;
+	list[2] = (Hitable*)&s3;
+	list[3] = (Hitable*)&s4;
 
-	HitableList world = hlist_create(list, 2);
+	HitableList world = hlist_create(list, 4);
 
 	Camera camera = cam_create_def();
 
@@ -60,7 +64,7 @@ int main()
 
 				Vec3 p = ray_point_at(&ray, 2.0f);
 
-				Vec3 tmp_color = get_color(&ray, &world);
+				Vec3 tmp_color = get_color(&ray, &world, 0);
 
 				vec3_add(&color, &tmp_color);
 			}
@@ -93,33 +97,20 @@ int main()
 	return 0;
 }
 
-Vec3 random_point_in_unit_sphere()
-{
-	Vec3 point;
-	do
-	{
-		vec3_set(&point, randf(), randf(), randf());
-		vec3_muls(&point, 2.0f);
-		vec3_subs(&point, 1.0f);
-	} while(vec3_sqrtlen(&point) >= 1.0f);
-
-	return point;
-}
-
-Vec3 get_color(const Ray* ray, Hitable* world)
+Vec3 get_color(const Ray* ray, Hitable* world, int depth)
 {
 	HitRecord record;
 
 	if(world->hit(world, ray, 0.001f, FLT_MAX, &record))
 	{
-		Vec3 target;
-		Vec3 rand_point = random_point_in_unit_sphere();
-		vec3_add(vec3_add_c(&record.p, &record.normal, &target), &rand_point);
-
-		Ray new_ray = ray_create(record.p, *vec3_sub(&target, &record.p));
-		Vec3 color = get_color(&new_ray, world);
-
-		return *vec3_muls(&color, 0.5f);
+		Ray scattered;
+		Vec3 attenuation;
+		if(depth < 50 && record.material->scatter(ray, &record, &attenuation, &scattered))
+		{
+			Vec3 color = get_color(&scattered, world, depth + 1);
+			return *vec3_mul(&attenuation, &color);
+		}
+		return vec3_create_val(0.0f);
 	} 
 
 	Vec3 unit_dir;

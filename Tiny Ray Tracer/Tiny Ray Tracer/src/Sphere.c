@@ -1,16 +1,30 @@
 #include "Sphere.h"
+#include "util.h"
 #include <math.h>
 
 int sphere_hit(void* sphere_ptr, const Ray* ray, float tmin, float tmax, HitRecord* record);
 
-Sphere sphere_create(Vec3 center, float radius)
+Sphere sphere_create(Vec3 center, float radius, Material* material)
 {
-	return (Sphere) { sphere_hit, center, radius };
+	return (Sphere) { sphere_hit, center, radius, material};
 }
 
+Vec3 random_point_in_unit_sphere()
+{
+	Vec3 point;
+	do
+	{
+		vec3_set(&point, randf(), randf(), randf());
+		vec3_muls(&point, 2.0f);
+		vec3_subs(&point, 1.0f);
+	} while(vec3_sqrtlen(&point) >= 1.0f);
+
+	return point;
+}
 inline void set_record(float t, HitRecord* record, const Ray* ray, const Sphere* sphere)
 {
 	record->t = t;
+	record->material = sphere->material;
 	ray_get_point_at(ray, t, &record->p);
 	vec3_divs(vec3_sub_c(&record->p, &sphere->center, &record->normal), sphere->radius);
 }
