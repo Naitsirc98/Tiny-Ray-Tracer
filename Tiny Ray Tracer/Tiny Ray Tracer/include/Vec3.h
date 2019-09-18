@@ -1,6 +1,6 @@
 #pragma once
 
-typedef struct
+typedef struct Vec3
 {
 	union
 	{

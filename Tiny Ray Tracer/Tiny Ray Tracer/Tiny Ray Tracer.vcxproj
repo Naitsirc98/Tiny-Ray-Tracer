@@ -119,6 +119,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Camera.c" />
     <ClCompile Include="src\HitableList.c" />
     <ClCompile Include="src\Image.c" />
     <ClCompile Include="src\main.c" />
@@ -127,6 +128,7 @@
     <ClCompile Include="src\Vec3.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Hitable.h" />
     <ClInclude Include="include\HitableList.h" />
     <ClInclude Include="include\Image.h" />

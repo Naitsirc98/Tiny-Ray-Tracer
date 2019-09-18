@@ -33,6 +33,9 @@
     <ClCompile Include="src\HitableList.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Camera.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\stb_image_write.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\HitableList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

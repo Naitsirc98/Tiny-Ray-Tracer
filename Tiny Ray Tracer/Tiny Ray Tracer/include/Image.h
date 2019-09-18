@@ -3,12 +3,12 @@
 #define IMG_CHANNELS_RGB 3
 #define IMG_CHANNELS_RGBA 4
 
-typedef enum 
+typedef enum ImageFormat
 {
     PNG, BMP, TGA, JPEG, HDR
 } ImageFormat;
 
-typedef struct 
+typedef struct Image
 {
     unsigned int width;
     unsigned int height;

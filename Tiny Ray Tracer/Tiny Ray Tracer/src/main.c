@@ -1,29 +1,34 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <float.h>
+#include <math.h>
 #include "Image.h"
-#include "Vec3.h"
-#include "Ray.h"
 #include "Sphere.h"
 #include "HitableList.h"
-#include <stdlib.h>
-#include <math.h>
-#include <float.h>
+#include "Camera.h"
+#include <time.h>
 
 #define IMAGE_FILENAME "output_image.png"
+
+inline float randf()
+{
+	return ((float)rand()/(float)(RAND_MAX));
+}
 
 Vec3 get_color(const Ray* ray, Hitable* world);
 
 int main()
 {
+	srand(time(NULL));
+
 	Image image;
+
+	// Antialiasing samples
+	unsigned int samples = 100;
 
 	img_init(&image, 200, 100, IMG_CHANNELS_RGB);
 
 	int offset = 0;
-
-	Vec3 lower_left_corner = vec3_create(-2.0f, -1.0f, -1.0f);
-	Vec3 horizontal = vec3_create(4.0f, 0.0f, 0.0f);
-	Vec3 vertical = vec3_create(0.0f, 2.0f, 0.0f);
-	Vec3 origin = vec3_create_val(0.0f);
 
 	Hitable* list[2];
 
@@ -35,25 +40,29 @@ int main()
 
 	HitableList world = hlist_create(list, 2);
 
+	Camera camera = cam_create_def();
+
 	for(int i = image.height - 1;i >= 0;--i)
 	{
 		for(int j = 0;j < image.width;++j)
 		{
-			float u = (float)j / (float)image.width;
-			float v = (float)i / (float)image.height;
+			Vec3 color = vec3_create_val(0.0f);
 
-			Vec3 d1 = vec3_copy(&horizontal);
-			vec3_muls(&d1, u);
-			vec3_add(&d1, &lower_left_corner);
-			Vec3 d2 = vec3_copy(&vertical);
-			vec3_muls(&d2, v);
-			vec3_add(&d1, &d2);
+			for(int s = 0;s < samples;++s)
+			{
+				float u = (float)(j + randf()) / (float)image.width;
+				float v = (float)(i + randf()) / (float)image.height;
 
-			Ray ray = ray_create(origin, d1);
+				Ray ray = cam_get_ray(&camera, u, v);
 
-			Vec3 p = ray_point_at(&ray, 2.0f);
+				Vec3 p = ray_point_at(&ray, 2.0f);
 
-			Vec3 color = get_color(&ray, &world);
+				Vec3 tmp_color = get_color(&ray, &world);
+
+				vec3_add(&color, &tmp_color);
+			}
+			// Get average color
+			vec3_divs(&color, samples);
 
 			unsigned char ir = (unsigned char)(255.99f * color.r);
 			unsigned char ig = (unsigned char)(255.99f * color.g);

@@ -4,7 +4,7 @@
 #define TRUE 1
 #define FALSE 0
 
-typedef struct
+typedef struct HitRecord
 {
 	float t;
 	Vec3 p;

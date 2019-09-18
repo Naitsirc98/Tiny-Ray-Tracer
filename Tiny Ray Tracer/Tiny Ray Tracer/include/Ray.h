@@ -1,7 +1,7 @@
 #pragma once
 #include "Vec3.h"
 
-typedef struct
+typedef struct Ray
 {
 	Vec3 origin;
 	Vec3 direction;
