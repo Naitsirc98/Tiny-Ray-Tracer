@@ -22,30 +22,32 @@ int main()
 	// Gamma correction
 	float gamma = 2.2f;
 
-	img_init(&image, 800, 400, IMG_CHANNELS_RGB);
+	img_init(&image, 200, 100, IMG_CHANNELS_RGB);
 
-	float aspectRatio = (float)image.width / (float)image.height;
+	float aspect = (float)image.width / (float)image.height;
 
 	int offset = 0;
 
-	Hitable* list[4];
-
-	Lambertian lamb1 = mat_create_lamb(vec3_create(0.8f, 0.3f, 0.3f));
+	Lambertian lamb1 = mat_create_lamb(vec3_create(0.1f, 0.2f, 0.5f));
 	Lambertian lamb2 = mat_create_lamb(vec3_create(0.8f, 0.8f, 0.0f));
-	Metal metal1 = mat_create_metal(vec3_create(0.8f, 0.6f, 0.2f), 1.0f);
+	Metal metal1 = mat_create_metal(vec3_create(0.8f, 0.6f, 0.2f), 0.1f);
 	Metal metal2 = mat_create_metal(vec3_create(0.8f, 0.8f, 0.8f), 0.3f);
+	Dielectric diel1 = mat_create_diel(1.5f);
 
 	Sphere s1 = sphere_create(vec3_create(0, 0, -1), 0.5f, &lamb1);
 	Sphere s2 = sphere_create(vec3_create(0, -100.5f, -1), 100.0f, &lamb2);
 	Sphere s3 = sphere_create(vec3_create(1, 0, -1), 0.5f, &metal1);
-	Sphere s4 = sphere_create(vec3_create(-1, 0, -1), 0.5f, &metal2);
+	Sphere s4 = sphere_create(vec3_create(-1, 0, -1), 0.5f, &diel1);
+	Sphere s5 = sphere_create(vec3_create(-1, 0, -1), -0.45f, &diel1);
 
+	Hitable* list[5];
 	list[0] = (Hitable*)&s1;
 	list[1] = (Hitable*)&s2;
 	list[2] = (Hitable*)&s3;
 	list[3] = (Hitable*)&s4;
+	list[4] = (Hitable*)&s5;
 
-	HitableList world = hlist_create(list, 4);
+	HitableList world = hlist_create(list, 5);
 
 	Camera camera = cam_create_def();
 

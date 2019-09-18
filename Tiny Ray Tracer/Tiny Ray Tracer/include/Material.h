@@ -7,7 +7,6 @@ typedef int (*ScatterFunction)(const Ray*, const HitRecord*, Vec3*, Ray*);
 typedef struct Material
 {
 	ScatterFunction scatter;
-	Vec3 albedo;
 } Material;
 
 typedef struct Lambertian
@@ -28,3 +27,12 @@ typedef struct Metal
 
 /* Creates a Metal Material with the given albedo color and fuzz */
 Metal mat_create_metal(Vec3 albedo, float fuzz);
+
+typedef struct Dielectric
+{
+	ScatterFunction scatter;
+	float refractive_index;
+} Dielectric;
+
+/* Creates a Dielectric Material with the given albedo color and fuzz */
+Dielectric mat_create_diel(float refractive_index);
