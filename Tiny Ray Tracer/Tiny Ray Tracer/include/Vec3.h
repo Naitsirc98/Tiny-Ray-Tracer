@@ -74,7 +74,5 @@ float vec3_dot(const Vec3* v1, const Vec3* v2);
 Vec3* vec3_cross(Vec3* v1, const Vec3* v2);
 /* Performs the cross product between v1 and v2 and stores the result in dest*/
 Vec3* vec3_cross_c(const Vec3* v1, const Vec3* v2, Vec3* dest);
-/* Returns a copy of the given vector */
-Vec3 vec3_copy(const Vec3* src);
 /* Makes a copy of the given vector and stores the result in dest*/
 Vec3* vec3_copy_to(const Vec3* src, Vec3* dest);

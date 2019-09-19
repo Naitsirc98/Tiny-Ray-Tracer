@@ -195,15 +195,10 @@ Vec3* vec3_cross(Vec3* v1, const Vec3* v2)
 Vec3* vec3_cross_c(const Vec3* v1, const Vec3* v2, Vec3* dest)
 {
 	float x = v1->y * v2->z - v1->z * v2->y;
-	float y = v1->x * v2->z - v1->z * v2->x;
+	float y = -(v1->x * v2->z - v1->z * v2->x);
 	float z = v1->x * v2->y - v1->y * v2->x;
 
 	return vec3_set(dest, x, y, z);
-}
-
-Vec3 vec3_copy(const Vec3* src)
-{
-	return (Vec3) {src->x, src->y, src->z};
 }
 
 Vec3* vec3_copy_to(const Vec3* src, Vec3* dest)

@@ -1,14 +1,29 @@
 #include "Camera.h"
+#include "util.h"
 
-Camera cam_create(Vec3 origin, Vec3 lower_left, Vec3 horizontal, Vec3 vertical)
+Camera cam_create(Vec3 position, Vec3 target, Vec3 up, float vfov, float aspect)
 {
-	return (Camera) {origin, lower_left, horizontal, vertical};
-}
+	Camera cam;
 
-Camera cam_create_def()
-{
-	return cam_create(vec3_create_val(0.0f), vec3_create(-2, -1, -1),
-		vec3_create(4, 0, 0), vec3_create(0, 2, 0));
+	float theta = vfov * (float)(M_PI / 180.0);
+	float half_height = tanf(theta/2);
+	float half_width = aspect * half_height;
+
+	cam.origin = position;
+
+	Vec3 u, v, w;
+	vec3_normalize(vec3_sub_c(&position, &target, &w));
+	vec3_normalize(vec3_cross_c(&up, &w, &u));
+	vec3_cross_c(&w, &u, &v);
+
+	vec3_muls(&u, half_width);
+	vec3_muls(&v, half_height);
+	vec3_sub(vec3_sub(vec3_sub_c(&cam.origin, &u, &cam.lower_left), &v), &w);
+
+	vec3_muls_c(&u, 2, &cam.horizontal);
+	vec3_muls_c(&v, 2, &cam.vertical);
+
+	return cam;
 }
 
 Ray cam_get_ray(Camera* cam, float u, float v)
@@ -16,9 +31,11 @@ Ray cam_get_ray(Camera* cam, float u, float v)
 	Vec3 d1 = cam->horizontal;
 	vec3_muls(&d1, u);
 	vec3_add(&d1, &cam->lower_left);
+
 	Vec3 d2 = cam->vertical;
 	vec3_muls(&d2, v);
 	vec3_add(&d1, &d2);
+
 	vec3_sub(&d1, &cam->origin);
 
 	return ray_create(cam->origin, d1);
