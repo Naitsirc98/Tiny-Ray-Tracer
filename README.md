@@ -15,5 +15,5 @@ Using a 1920x1080 RGB image, with 64 samples per pixel and gamma correction of 2
 
 ![Output Image 1920x1080 RGB, 64 samples](https://github.com/Naitsirc98/Tiny-Ray-Tracer/blob/master/Tiny%20Ray%20Tracer/Tiny%20Ray%20Tracer/output_image.png?raw=true "Ray Tracing Scene")
 
-This particular scene was rendered after approximately 25 minutes, which is a pretty decent time for the CPU.
+This particular scene was rendered after approximately 25 minutes, which is a pretty decent rendering time for the CPU.
 
