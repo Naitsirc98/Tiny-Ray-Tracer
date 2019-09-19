@@ -5,6 +5,7 @@
 #define FALSE 0
 
 typedef struct Material Material;
+typedef struct Hitable Hitable;
 
 typedef struct HitRecord
 {
@@ -15,10 +16,12 @@ typedef struct HitRecord
 } HitRecord;
 
 typedef int(*HitFunction)(void*, const Ray*, float, float, HitRecord*);
+typedef void(*FreeFunction)(Hitable*);
 
 typedef struct Hitable
 {
 	HitFunction hit;
+	FreeFunction free;
 } Hitable;
 
 

@@ -48,14 +48,38 @@ Lambertian mat_create_lamb(Vec3 albedo)
 	return (Lambertian) {lamb_scatter, albedo};
 }
 
+Lambertian* mat_new_lamb(Vec3 albedo)
+{
+	Lambertian* lamb = ALLOC_NEW(Lambertian, 1);
+	lamb->scatter = lamb_scatter;
+	lamb->albedo = albedo;
+	return lamb;
+}
+
 Metal mat_create_metal(Vec3 albedo, float fuzz)
 {
 	return (Metal) {metal_scatter, albedo, fuzz};
 }
 
+Metal* mat_new_metal(Vec3 albedo)
+{
+	Metal* metal = ALLOC_NEW(Metal, 1);
+	metal->scatter = metal_scatter;
+	metal->albedo = albedo;
+	return metal;
+}
+
 Dielectric mat_create_diel(float refractive_index)
 {
 	return (Dielectric) {diel_scatter, refractive_index};
+}
+
+Dielectric* mat_new_diel(float refractive_index)
+{
+	Dielectric* diel = ALLOC_NEW(Dielectric, 1);
+	diel->scatter = diel_scatter;
+	diel->refractive_index = refractive_index;
+	return diel;
 }
 
 int lamb_scatter(const Ray* in_ray, const HitRecord* record, Vec3* attenuation, Ray* out_ray)

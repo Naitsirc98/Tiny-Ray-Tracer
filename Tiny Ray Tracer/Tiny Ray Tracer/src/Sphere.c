@@ -1,12 +1,35 @@
 #include "Sphere.h"
 #include "util.h"
-#include <math.h>
 
 int sphere_hit(void* sphere_ptr, const Ray* ray, float tmin, float tmax, HitRecord* record);
 
+void sphere_free_func(Hitable* hitable_ptr)
+{
+	sphere_free((Sphere*)hitable_ptr);
+}
+
 Sphere sphere_create(Vec3 center, float radius, Material* material)
 {
-	return (Sphere) { sphere_hit, center, radius, material};
+	return (Sphere) { sphere_hit, sphere_free_func, center, radius, material};
+}
+
+Sphere* sphere_new(Vec3 center, float radius, Material* material)
+{
+	Sphere* s = ALLOC_NEW(Sphere, 1);
+
+	s->hit = sphere_hit;
+	s->free = sphere_free_func;
+	s->center = center;
+	s->radius = radius;
+	s->material = material;
+
+	return s;
+}
+
+void sphere_free(Sphere* sphere)
+{
+	free(sphere->material);
+	free(sphere);
 }
 
 Vec3 random_point_in_unit_sphere()
