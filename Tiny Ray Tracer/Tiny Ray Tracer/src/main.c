@@ -49,13 +49,17 @@ int main()
 
 	HitableList world = hlist_create(list, 5);
 
-	Vec3 cam_pos = vec3_create(-2, 2, 1);
+	Vec3 cam_pos = vec3_create(3, 3, 2);
 	Vec3 cam_target = vec3_create(0, 0, -1);
 	Vec3 cam_up = vec3_create(0, 1, 0);
+	Vec3 pt = cam_pos;
+	vec3_sub(&pt, &cam_target);
+	float dist_to_focus = vec3_length(&pt);
+	float aperture = 2.0f;
 
-	float fov = 24.0f;
+	float fov = 20.0f;
 
-	Camera camera = cam_create(cam_pos, cam_target, cam_up, fov, aspect);
+	Camera camera = cam_create(cam_pos, cam_target, cam_up, fov, aspect, aperture, dist_to_focus);
 
 	for(int i = image.height - 1;i >= 0;--i)
 	{

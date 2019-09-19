@@ -201,6 +201,11 @@ Vec3* vec3_cross_c(const Vec3* v1, const Vec3* v2, Vec3* dest)
 	return vec3_set(dest, x, y, z);
 }
 
+Vec3 vec3_copy(const Vec3* src)
+{
+	return vec3_create(src->x, src->y, src->z);
+}
+
 Vec3* vec3_copy_to(const Vec3* src, Vec3* dest)
 {
 	return vec3_set(dest, src->x, src->y, src->z);

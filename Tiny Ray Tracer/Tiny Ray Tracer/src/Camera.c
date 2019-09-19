@@ -1,9 +1,23 @@
 #include "Camera.h"
 #include "util.h"
 
-Camera cam_create(Vec3 position, Vec3 target, Vec3 up, float vfov, float aspect)
+Vec3 random_point_in_unit_disk()
+{
+	Vec3 point;
+	do
+	{
+		point = vec3_create(2 * randf(), 2 * randf(), 0.0f);
+		--point.x;
+		--point.y;
+	} while(vec3_dot(&point, &point) >= 1.0f);
+	return point;
+}
+
+Camera cam_create(Vec3 position, Vec3 target, Vec3 up, float vfov, float aspect, float aperture, float focus_dist)
 {
 	Camera cam;
+
+	cam.lens_radius = aperture / 2.0f;
 
 	float theta = vfov * (float)(M_PI / 180.0);
 	float half_height = tanf(theta/2);
@@ -11,14 +25,17 @@ Camera cam_create(Vec3 position, Vec3 target, Vec3 up, float vfov, float aspect)
 
 	cam.origin = position;
 
-	Vec3 u, v, w;
-	vec3_normalize(vec3_sub_c(&position, &target, &w));
-	vec3_normalize(vec3_cross_c(&up, &w, &u));
-	vec3_cross_c(&w, &u, &v);
+	vec3_normalize(vec3_sub_c(&position, &target, &cam.w));
+	vec3_normalize(vec3_cross_c(&up, &cam.w, &cam.u));
+	vec3_cross_c(&cam.w, &cam.u, &cam.v);
 
-	vec3_muls(&u, half_width);
-	vec3_muls(&v, half_height);
-	vec3_sub(vec3_sub(vec3_sub_c(&cam.origin, &u, &cam.lower_left), &v), &w);
+	Vec3 w = cam.w;
+	Vec3 u = cam.u;
+	Vec3 v = cam.v;
+
+	vec3_muls(&u, half_width * focus_dist);
+	vec3_muls(&v, half_height * focus_dist);
+	vec3_sub(vec3_sub(vec3_sub_c(&cam.origin, &u, &cam.lower_left), &v), vec3_muls(&w, focus_dist));
 
 	vec3_muls_c(&u, 2, &cam.horizontal);
 	vec3_muls_c(&v, 2, &cam.vertical);
@@ -26,18 +43,29 @@ Camera cam_create(Vec3 position, Vec3 target, Vec3 up, float vfov, float aspect)
 	return cam;
 }
 
-Ray cam_get_ray(Camera* cam, float u, float v)
+Ray cam_get_ray(Camera* cam, float s, float t)
 {
-	Vec3 d1 = cam->horizontal;
-	vec3_muls(&d1, u);
-	vec3_add(&d1, &cam->lower_left);
+	Vec3 random_point = random_point_in_unit_disk();
+	vec3_muls(&random_point, cam->lens_radius);
 
-	Vec3 d2 = cam->vertical;
-	vec3_muls(&d2, v);
-	vec3_add(&d1, &d2);
+	Vec3 u = cam->u;
+	vec3_muls(&u, random_point.x);
+	Vec3 v = cam->v;
+	vec3_muls(&v, random_point.y);
+	
+	Vec3 offset = *vec3_add(&u, &v);
 
-	vec3_sub(&d1, &cam->origin);
+	Vec3 ray_origin = cam->origin;
+	vec3_add(&ray_origin, &offset);
 
-	return ray_create(cam->origin, d1);
+	Vec3 ray_dir = cam->lower_left;
+	Vec3 horizontal = cam->horizontal;
+	vec3_muls(&horizontal, s);
+	Vec3 vertical = cam->vertical;
+	vec3_muls(&vertical, t);
+
+	vec3_sub(vec3_sub(vec3_add(vec3_add(&ray_dir, &horizontal), &vertical) ,&cam->origin), &offset);
+
+	return ray_create(ray_origin, ray_dir);
 }
 
